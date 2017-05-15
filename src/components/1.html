@@ -1,0 +1,206 @@
+曾藩 15:04:44
+<template>
+	<div class="container">
+		<HomeHeader :home-data="homeData"></HomeHeader>
+		<HomeNav></HomeNav>
+		<HomeMain :home-data="homeData"></HomeMain>
+		<vFooter :is-active="1"></vFooter>
+	</div>
+</template>
+
+<script>
+import HomeHeader from "./home-header.vue";
+import HomeNav from "./home-nav.vue";
+import HomeMain from "./home-main.vue";
+import vFooter from "../common/footer.vue";
+export default {
+	data : function(){
+		return {
+			homeData : []
+		}
+	},
+	components : {
+		HomeHeader,
+		HomeMain,
+		HomeNav,
+		vFooter
+	},
+	created : function(){
+		this.getHomeData();
+	},
+	methods : {
+		getHomeData : function(){
+			this.$http.get("./static/json/home_data.json").then((res) => {
+				console.log(res.data);
+				this.homeData = res.data;
+			})
+		}
+	}
+}
+</script>
+
+<style>
+.container {
+    padding-bottom: 0.82rem;
+}	
+</style>
+
+
+
+require("swiper/dist/js/swiper.min.js");
+require("swiper/dist/css/swiper.min.css");
+
+
+export default {
+	props : ["homeData"],
+	mounted : function(){
+		new Swiper(".swiper-container", {
+			autoplay: 3000,
+			loop: true,
+			pagination: ".swiper-pagination",
+			observer: true,
+			autoplayDisableOnInteraction : false
+		});
+	}
+}
+
+
+
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+require("swiper/dist/js/swiper.min.js");
+require("swiper/dist/css/swiper.min.css");
+import Vue from 'vue'
+import App from './App'
+import router from './router'
+import VueResource from "vue-resource";
+
+
+Vue.config.productionTip = false
+Vue.use(VueResource );
+
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  router,
+  template: '<App/>',
+  components: { App }
+})
+
+
+
+
+import Vue from 'vue'
+import Router from 'vue-router';
+import Home from "../components/home/home.vue";
+import Apt from "../components/home/home-apt.vue";
+import Say from "../components/home/home-say.vue";
+import My from "../components/my/my.vue";
+import Message from "../components/message/message.vue";
+
+Vue.use(Router)
+
+export default new Router({
+  routes: [
+    {
+      path: '/',
+      name: 'Home',
+      component: Home,
+      redirect: "/apt",
+      children : [
+      	{
+      		path: "apt",
+      		component : Apt
+      	},
+      	{
+      		path: "say",
+      		component : Say
+      	}
+      ]
+    },
+    {
+    	path: "/my",
+    	component: My
+    },
+    {
+    	path: "/message",
+    	component: Message
+    }
+  ]
+})
+
+
+<template>
+<ul class="footer-nav">
+	<li>
+		<a href="#/" :class="{active : isActive == 1}">
+			<i class="iconfont icon-shouye-shouye"></i>
+			<span>首页</span>
+		</a>
+	</li>
+	<li>
+		<a href="#/message" :class="{active : isActive == 2}">
+			<i class="iconfont icon-bf-icon-message"></i>
+			<span>消息</span>
+		</a>
+	</li>
+	<li>
+		<a :class="{active : this.isActive == 3}" href="javascript:;">
+			<i class="iconfont icon-gouwuche"></i>
+			<span>购物车</span>
+		</a>
+	</li>
+	<li>
+		<a :class="{active : this.isActive == 4}" href="javascript:;">
+			<i class="iconfont icon-fenlei"></i>
+			<span>类目</span>
+		</a>
+	</li>
+	<li>
+		<a href="#/my" :class="{active : isActive == 5}">
+			<i class="iconfont icon-wode"></i>
+			<span>我</span>
+		</a>
+	</li>
+</ul>
+</template>
+
+<script>
+export default {
+	props : ["isActive"]
+}
+</script>
+
+<style lang="less">
+.footer-nav {
+    position: fixed;
+    z-index: 99;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0.82rem;
+    display: flex;
+    background-color: #fff;
+    li {
+        height: 100%;
+        width: 20%;
+        a {
+            display: block;
+            height: 100%;
+            text-align: center;
+            color: #6b6b6b;
+            .iconfont {
+                font-size: 0.4rem;
+            }
+            span {
+                display: block;
+                font-size: 0.21rem;
+            }
+            &.active {
+                color: #c74146;
+            }
+        }
+    }
+}	
+</style>
+
